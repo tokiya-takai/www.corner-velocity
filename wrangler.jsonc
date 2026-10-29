@@ -1,0 +1,7 @@
+{
+  "name": "www-corner-velocity",
+  "compatibility_date": "2026-10-29",
+  // Worker のスクリプトはなく、public/ をそのまま配信する
+  "assets": { "directory": "./public" },
+  "routes": [{ "pattern": "www.corner-velocity.online", "custom_domain": true }]
+}

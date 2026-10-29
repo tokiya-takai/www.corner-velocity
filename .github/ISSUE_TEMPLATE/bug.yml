@@ -1,0 +1,60 @@
+name: 不具合の報告
+description: ゲームが動かない、表示や操作がおかしい、といった不具合を報告する
+title: "[不具合] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        報告ありがとうございます。この Issue は誰でも読めるので、名前やメールアドレスなどの個人情報は書かないでください。
+        同じ内容の報告がすでにないか、先に [これまでの Issue](https://github.com/tokiya-takai/www.corner-velocity/issues) で確かめてください。
+  - type: textarea
+    id: what
+    attributes:
+      label: 何が起きたか
+      description: 起きたことと、本来どうなってほしかったかを書いてください。
+    validations:
+      required: true
+  - type: input
+    id: wave
+    attributes:
+      label: 起きた場面
+      description: 例：第 6 波、開始画面、結果画面
+    validations:
+      required: true
+  - type: dropdown
+    id: device
+    attributes:
+      label: 端末
+      options:
+        - PC
+        - スマホ
+        - タブレット
+    validations:
+      required: true
+  - type: dropdown
+    id: input
+    attributes:
+      label: 操作方法
+      options:
+        - キーボード
+        - タッチ
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: OS とブラウザ
+      description: 例：Windows 11 と Chrome、iOS 18 と Safari
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 再現手順（任意）
+      description: 同じことが起きる手順が分かれば書いてください。
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: スクリーンショットや動画（任意）
+      description: ここにファイルをドラッグすると添付できます。

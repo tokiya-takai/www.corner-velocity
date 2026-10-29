@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CORNER VELOCITY｜ブラウザで遊べるエアコンバット</title>
+  <meta name="description" content="コックピットから敵機を追い、背後を取って撃ち落とす。ブラウザで遊べるローポリのエアコンバットゲーム。全 10 波、ネームド 10 名。無料、インストール不要。">
+  <link rel="canonical" href="https://www.corner-velocity.online/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.corner-velocity.online/">
+  <meta property="og:title" content="CORNER VELOCITY">
+  <meta property="og:description" content="コックピットから敵機を追い、背後を取って撃ち落とす。無料・インストール不要で、ブラウザから遊べるエアコンバットゲーム。">
+  <meta property="og:image" content="https://www.corner-velocity.online/shot.jpg">
+  <meta property="og:image:width" content="1600">
+  <meta property="og:image:height" content="840">
+  <meta property="og:locale" content="ja_JP">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:wght@500;600&display=swap" rel="stylesheet">
+  <style>
+    /* 色とフォントはゲームの画面に合わせる */
+    :root {
+      --bg: #0b1014;
+      --line: rgba(160, 196, 182, .22);
+      --fg: #d9e4de;
+      --dim: #8ea69c;
+      --hud: #7dffb0;
+      --mono: "Share Tech Mono", ui-monospace, Menlo, Consolas, monospace;
+      --label: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif;
+      --jp: system-ui, "Hiragino Sans", "Noto Sans JP", sans-serif;
+      color-scheme: dark;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.8 var(--jp); }
+    a { color: var(--hud); }
+    .wrap { max-width: 1040px; margin: 0 auto; padding: 0 16px; }
+
+    .bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 24px; padding-top: 16px; padding-bottom: 16px; }
+    .logo { font: 600 20px var(--label); letter-spacing: .14em; color: var(--fg); text-decoration: none; }
+    .bar nav { display: flex; flex-wrap: wrap; gap: 4px 20px; font-size: 14px; }
+    .bar nav a { color: var(--dim); text-decoration: none; }
+    .bar nav a:hover { color: var(--hud); }
+
+    .hero { padding: 48px 0 64px; }
+    .eyebrow { margin: 0; font: 500 16px var(--label); letter-spacing: .3em; text-transform: uppercase; color: var(--hud); }
+    h1 { margin: 4px 0 16px; font: 600 clamp(44px, 10vw, 96px)/1 var(--label); letter-spacing: .06em; }
+    .lead { max-width: 36em; margin: 0 0 32px; font-size: 18px; }
+    .play { display: inline-block; padding: 12px 40px; border: 2px solid var(--hud); background: var(--hud); color: var(--bg); font: 600 24px var(--label); letter-spacing: .16em; text-decoration: none; }
+    .play:hover { background: transparent; color: var(--hud); }
+    .note { margin: 12px 0 40px; color: var(--dim); font-size: 14px; }
+    .hero img { display: block; width: 100%; height: auto; border: 1px solid var(--line); }
+
+    section { padding: 48px 0; border-top: 1px solid var(--line); scroll-margin-top: 16px; }
+    h2 { margin: 0 0 24px; font-size: 24px; }
+    h2 span { display: block; font: 500 14px var(--label); letter-spacing: .3em; color: var(--hud); }
+    h3 { margin: 0 0 8px; font-size: 18px; }
+    p { margin: 0 0 16px; }
+
+    .grid { display: grid; gap: 32px; grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); }
+    .grid > * { min-width: 0; }
+    .grid p { margin: 0; color: var(--dim); }
+    .grid h3 { color: var(--fg); }
+
+    dl { display: grid; grid-template-columns: max-content 1fr; gap: 8px 24px; margin: 0; }
+    dt { color: var(--dim); }
+    dd { margin: 0; }
+    .keys dd { font-family: var(--mono); }
+    /* 見出しの長い表は、狭い画面では見出しの下に説明を置く */
+    @media (max-width: 560px) {
+      #requirements dl { grid-template-columns: 1fr; gap: 0; }
+      #requirements dd { margin-bottom: 12px; }
+    }
+
+    .buttons { display: flex; flex-wrap: wrap; gap: 12px; margin: 0 0 24px; }
+    .buttons a { padding: 10px 24px; border: 1px solid var(--hud); text-decoration: none; }
+    .buttons a:hover { background: rgba(125, 255, 176, .12); }
+    ul { margin: 0; padding-left: 1.4em; color: var(--dim); }
+
+    footer { padding-top: 32px; padding-bottom: 48px; border-top: 1px solid var(--line); color: var(--dim); font-size: 14px; }
+  </style>
+</head>
+<body>
+  <header class="wrap bar">
+    <a class="logo" href="/">CORNER VELOCITY</a>
+    <nav aria-label="ページ内">
+      <a href="#about">特徴</a>
+      <a href="#controls">操作</a>
+      <a href="#requirements">動作環境</a>
+      <a href="#contact">お問い合わせ</a>
+    </nav>
+  </header>
+
+  <main class="wrap">
+    <div class="hero">
+      <p class="eyebrow">Arcade dogfight</p>
+      <h1>CORNER VELOCITY</h1>
+      <p class="lead">コックピットから敵機を追い、背後を取って撃ち落とす。ブラウザで遊べる、ローポリのエアコンバットゲームです。</p>
+      <a class="play" href="https://corner-velocity.online/">PLAY NOW</a>
+      <p class="note">無料で、インストールも要りません。PC はキーボードで、スマホとタブレットは横向きにしてタッチで遊べます。</p>
+      <img src="/shot.jpg" width="1600" height="840" alt="ゲーム画面。コックピットから敵機をロックし、ミサイルを撃った直後。HUD に LOCK と MISSILE AWAY が出ている">
+    </div>
+
+    <section id="about">
+      <h2><span>FEATURES</span>ゲームの特徴</h2>
+      <div class="grid">
+        <div>
+          <h3>全 10 波を、残機なしで</h3>
+          <p>敵機は新兵、熟練、エースの順に強くなり、第 3・6・10 波にはネームドが 1 機だけで現れます。耐久が尽きるか墜落したら、その時点でプレイは終わりです。結果画面から、スコアを X に投稿できます。</p>
+        </div>
+        <div>
+          <h3>10 名のネームド</h3>
+          <p>ネームドは 1 人ずつ飛び方と撃ち方が違います。1 回のプレイで出会うのは、10 名のうちランダムな 3 名です。誰が現れるかは、飛んでみてのお楽しみです。</p>
+        </div>
+        <div>
+          <h3>コーナー速度で曲がる</h3>
+          <p>引ける G は 9 G まで。いちばん鋭く曲がれるのは、約 180 m/s のコーナー速度のときです。遅すぎれば失速し、Shift で G の上限を外すと、そのぶん機体が傷みます。</p>
+        </div>
+        <div>
+          <h3>ロック、ミサイル、フレア</h3>
+          <p>機首の前に敵を 1.5 秒捉え続けるとロックし、撃ったミサイルが敵を追います。敵にロックされたら、レーダー警報で方向を読み、フレアを撒いて急旋回で振り切ります。</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="controls">
+      <h2><span>CONTROLS</span>操作</h2>
+      <p>同じ一覧は、ゲームの開始画面と一時停止の画面でも見られます。</p>
+      <div class="grid">
+        <div>
+          <h3>キーボード</h3>
+          <dl class="keys">
+            <dt>操縦</dt><dd>矢印キー / WASD</dd>
+            <dt>加速・減速</dt><dd>E / Q</dd>
+            <dt>機銃</dt><dd>Space</dd>
+            <dt>ミサイル</dt><dd>F</dd>
+            <dt>フレア</dt><dd>G</dd>
+            <dt>G の上限を外す</dt><dd>Shift</dd>
+            <dt>見回す</dt><dd>画面をドラッグ</dd>
+            <dt>敵を目で追う</dt><dd>V</dd>
+            <dt>一時停止</dt><dd>P / Esc</dd>
+            <dt>消音</dt><dd>M</dd>
+          </dl>
+        </div>
+        <div>
+          <h3>タッチ</h3>
+          <dl class="keys">
+            <dt>操縦</dt><dd>左側をドラッグ</dd>
+            <dt>加速・減速</dt><dd>タップで入り切り</dd>
+            <dt>機銃</dt><dd>GUN</dd>
+            <dt>ミサイル</dt><dd>MSL</dd>
+            <dt>フレア</dt><dd>FLR</dd>
+            <dt>見回す</dt><dd>右側をドラッグ</dd>
+            <dt>敵を目で追う</dt><dd>目で追う</dd>
+            <dt>一時停止</dt><dd>II</dd>
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <section id="requirements">
+      <h2><span>REQUIREMENTS</span>動作環境</h2>
+      <dl>
+        <dt>ブラウザ</dt><dd>WebGL に対応した最近のブラウザで遊べます。</dd>
+        <dt>スマホ・タブレット</dt><dd>横向きで遊びます。縦に持つと「横向きにしてください」と表示され、遊んでいる途中なら一時停止します。</dd>
+        <dt>音</dt><dd>ブラウザの制限で、ゲームを始めた操作（Enter またはタップ）から鳴ります。M キーで消音できます。</dd>
+        <dt>スコアの保存</dt><dd>ベスト 3 のスコアは、遊んだブラウザの中にだけ保存されます。</dd>
+      </dl>
+    </section>
+
+    <section id="contact">
+      <h2><span>CONTACT</span>お問い合わせ</h2>
+      <p>不具合の報告と、要望・感想は、GitHub の Issue で受け付けています。</p>
+      <div class="buttons">
+        <a href="https://github.com/tokiya-takai/www.corner-velocity/issues/new?template=bug.yml">不具合を報告する</a>
+        <a href="https://github.com/tokiya-takai/www.corner-velocity/issues/new?template=feedback.yml">要望・感想を送る</a>
+      </div>
+      <ul>
+        <li>書き込むには、GitHub のアカウントが必要です。</li>
+        <li>Issue は誰でも読めます。名前やメールアドレスなどの個人情報は書かないでください。</li>
+        <li>同じ内容の報告がすでにないか、先に<a href="https://github.com/tokiya-takai/www.corner-velocity/issues">これまでの Issue</a> で確かめてください。</li>
+      </ul>
+    </section>
+
+    <section id="credits">
+      <h2><span>CREDITS</span>クレジット</h2>
+      <dl>
+        <dt>BGM</dt><dd>秋山裕和（<a href="https://www.hmix.net/">H/MIX GALLERY</a>）</dd>
+        <dt>効果音</dt><dd><a href="https://otologic.jp/">OtoLogic</a>（<a href="https://creativecommons.org/licenses/by/4.0/deed.ja">CC BY 4.0</a>）</dd>
+        <dt>音声</dt><dd><a href="https://ondoku3.com/">音読さん</a></dd>
+        <dt>3D 描画</dt><dd><a href="https://threejs.org/">three.js</a>（MIT License）</dd>
+      </dl>
+    </section>
+  </main>
+
+  <footer class="wrap">© 2026 CORNER VELOCITY</footer>
+</body>
+</html>
